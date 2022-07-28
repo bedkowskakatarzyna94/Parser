@@ -47,31 +47,69 @@ fun findClosingParenthesisIndex(openingBraceIndex: Int, expression: MutableList<
     return -1
 }
 
+fun checkCorrectnessOfParentheses(expression: MutableList<String>): Boolean {
+    var numberOfOpeningParentheses = 0;
+    var numberOfClosingParentheses = 0;
 
-//fun validateExpression(expression: MutableList<String>): Boolean{
-//
-//}
+    for (element in expression) {
+        if (element == "(") {
+            numberOfOpeningParentheses += 1
+        }
+        if (element == ")") {
+            numberOfClosingParentheses += 1
+        }
+    }
+    return numberOfOpeningParentheses == numberOfClosingParentheses
+}
+
+fun checkCorrectnessOfOperandsAndOperators(expression: MutableList<String>): Boolean {
+    expression.forEach {
+        if (it.toIntOrNull() == null) {
+            when (it) {
+                "*" -> {}
+                "/" -> {}
+                "+" -> {}
+                "-" -> {}
+                "(" -> {}
+                ")" -> {}
+                else -> return false
+            }
+        }
+    }
+    return true
+}
+
+
+fun validateExpression(expression: MutableList<String>): Boolean {
+    return checkCorrectnessOfParentheses(expression) && checkCorrectnessOfOperandsAndOperators(expression)
+}
 
 
 fun main() {
 
-    print("Enter a mathematical expression (separate each number and operator with a space): ")
-    val expression: MutableList<String> = readLine()!!.split(' ').toMutableList()
+    print("Enter a mathematical expression (separate each number, parenthesis and operator with a space): ")
+    val expression: MutableList<String> = readLine()?.split(' ')?.toMutableList() ?: mutableListOf()
 
-    while (true) {
-        val openingParenthesisIndex = expression.indexOfLast { it == "(" }
-        val closingParenthesisIndex = findClosingParenthesisIndex(openingParenthesisIndex, expression)
+    if (validateExpression(expression)) {
 
-        if ((openingParenthesisIndex != -1) and (closingParenthesisIndex != -1)) {
-            val partialExpression = expression.slice((openingParenthesisIndex + 1) until closingParenthesisIndex)
-            val resultOfPartialExpression = calculateExpression(partialExpression as MutableList<String>)
-            expression.subList(openingParenthesisIndex, closingParenthesisIndex).clear()
-            expression[openingParenthesisIndex] = resultOfPartialExpression.toString()
-        } else {
-            break
+        while (true) {
+            val openingParenthesisIndex = expression.indexOfLast { it == "(" }
+            val closingParenthesisIndex = findClosingParenthesisIndex(openingParenthesisIndex, expression)
+
+            if ((openingParenthesisIndex != -1) and (closingParenthesisIndex != -1)) {
+                val subexpression = expression.slice((openingParenthesisIndex + 1) until closingParenthesisIndex)
+                val resultOfPartialExpression = calculateExpression(subexpression.toMutableList())
+                expression.subList(openingParenthesisIndex, closingParenthesisIndex).clear()
+                expression[openingParenthesisIndex] = resultOfPartialExpression.toString()
+            } else {
+                break
+            }
         }
-    }
-    val result = calculateExpression(expression)
-    println("Result: $result")
 
+        val result = calculateExpression(expression)
+        println("Result: $result")
+
+    } else {
+        println("Invalid input")
+    }
 }
