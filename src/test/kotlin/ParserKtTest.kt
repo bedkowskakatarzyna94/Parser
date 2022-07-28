@@ -49,11 +49,12 @@ internal class ParserKtTest {
         val expression = "( 1 + 2 ) * 3"
         val expression2 = "12 * ( 5 - 4 ) * ( ( 2 - 3 * 8 - 2 ) + 3 * 4 )"
         val expression3 = "( 34 * ( 3 - ( 4 * -32 ) ) * 82 ) * ( 2 - 3 * 21 ) + 42"
-        val expression4 = ""
+
         // WHEN
         val result = solveExpression(expression)
         val result2 = solveExpression(expression2)
         val result3 = solveExpression(expression3)
+
         // THEN
         assertEquals(9, result)
         assertEquals(-144, result2)
