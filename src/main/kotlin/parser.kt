@@ -1,4 +1,4 @@
-fun calculateExpression(expression: MutableList<String>): Int {
+private fun calculateExpression(expression: MutableList<String>): Int {
 
     val operators = listOf("*", "/")
 
@@ -37,7 +37,7 @@ fun calculateExpression(expression: MutableList<String>): Int {
     return result
 }
 
-fun findClosingParenthesisIndex(openingBraceIndex: Int, expression: MutableList<String>): Int {
+private fun findClosingParenthesisIndex(openingBraceIndex: Int, expression: MutableList<String>): Int {
     if (openingBraceIndex != -1) {
         for (index in openingBraceIndex until expression.size)
             if (expression[index] == ")") {
@@ -47,7 +47,7 @@ fun findClosingParenthesisIndex(openingBraceIndex: Int, expression: MutableList<
     return -1
 }
 
-fun checkCorrectnessOfParentheses(expression: MutableList<String>): Boolean {
+private fun checkCorrectnessOfParentheses(expression: MutableList<String>): Boolean {
     var numberOfOpeningParentheses = 0;
     var numberOfClosingParentheses = 0;
 
@@ -62,7 +62,7 @@ fun checkCorrectnessOfParentheses(expression: MutableList<String>): Boolean {
     return numberOfOpeningParentheses == numberOfClosingParentheses
 }
 
-fun checkCorrectnessOfOperandsAndOperators(expression: MutableList<String>): Boolean {
+private fun checkCorrectnessOfOperandsAndOperators(expression: MutableList<String>): Boolean {
     expression.forEach {
         if (it.toIntOrNull() == null) {
             when (it) {
@@ -79,37 +79,37 @@ fun checkCorrectnessOfOperandsAndOperators(expression: MutableList<String>): Boo
     return true
 }
 
-
-fun validateExpression(expression: MutableList<String>): Boolean {
+private fun validateExpression(expression: MutableList<String>): Boolean {
     return checkCorrectnessOfParentheses(expression) && checkCorrectnessOfOperandsAndOperators(expression)
 }
 
+fun solveExpression(input: String?): Int {
+    val expression: MutableList<String> = input?.split(' ')?.toMutableList() ?: mutableListOf()
+
+    if (!validateExpression(expression)) {
+        println("Invalid input")
+        throw IllegalArgumentException(input)
+    }
+
+    while (true) {
+        val openingParenthesisIndex = expression.indexOfLast { it == "(" }
+        val closingParenthesisIndex = findClosingParenthesisIndex(openingParenthesisIndex, expression)
+
+        if ((openingParenthesisIndex != -1) and (closingParenthesisIndex != -1)) {
+            val subexpression = expression.slice((openingParenthesisIndex + 1) until closingParenthesisIndex)
+            val resultOfPartialExpression = calculateExpression(subexpression.toMutableList())
+            expression.subList(openingParenthesisIndex, closingParenthesisIndex).clear()
+            expression[openingParenthesisIndex] = resultOfPartialExpression.toString()
+        } else {
+            break
+        }
+    }
+
+    return calculateExpression(expression)
+}
 
 fun main() {
-
     print("Enter a mathematical expression (separate each number, parenthesis and operator with a space): ")
-    val expression: MutableList<String> = readLine()?.split(' ')?.toMutableList() ?: mutableListOf()
-
-    if (validateExpression(expression)) {
-
-        while (true) {
-            val openingParenthesisIndex = expression.indexOfLast { it == "(" }
-            val closingParenthesisIndex = findClosingParenthesisIndex(openingParenthesisIndex, expression)
-
-            if ((openingParenthesisIndex != -1) and (closingParenthesisIndex != -1)) {
-                val subexpression = expression.slice((openingParenthesisIndex + 1) until closingParenthesisIndex)
-                val resultOfPartialExpression = calculateExpression(subexpression.toMutableList())
-                expression.subList(openingParenthesisIndex, closingParenthesisIndex).clear()
-                expression[openingParenthesisIndex] = resultOfPartialExpression.toString()
-            } else {
-                break
-            }
-        }
-
-        val result = calculateExpression(expression)
-        println("Result: $result")
-
-    } else {
-        println("Invalid input")
-    }
+    val result = solveExpression(readLine())
+    println("Result: $result")
 }
