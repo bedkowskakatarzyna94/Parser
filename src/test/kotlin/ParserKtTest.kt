@@ -14,7 +14,7 @@ internal class ParserKtTest {
     }
 
     @Test
-    fun shouldCorrectlySubtractTwoNumbers(){
+    fun shouldCorrectlySubtractTwoNumbers() {
         // GIVEN
         val expression = "10 - 8"
         // WHEN
@@ -24,7 +24,7 @@ internal class ParserKtTest {
     }
 
     @Test
-    fun shouldCorrectlyMultiplyTwoNumbers(){
+    fun shouldCorrectlyMultiplyTwoNumbers() {
         // GIVEN
         val expression = "5 * 3"
         // WHEN
@@ -34,13 +34,50 @@ internal class ParserKtTest {
     }
 
     @Test
-    fun shouldCorrectlyDivideTwoNumbers(){
+    fun shouldCorrectlyDivideTwoNumbers() {
         // GIVEN
         val expression = "20 / 4"
         // WHEN
         val result = solveExpression(expression)
         // THEN
         assertEquals(5, result)
+    }
+
+    @Test
+    fun checkCalculationWithDividing(){
+        // GIVEN
+        val expression = "20 / 2 / 5 / 2"
+        // WHEN
+        val result = solveExpression(expression)
+        // THEN
+        assertEquals(1, result)
+    }
+    @Test
+    fun checkCalculationWithMultiplication(){
+        // GIVEN
+        val expression = "3 * 4 * 8 * 2"
+        // WHEN
+        val result = solveExpression(expression)
+        // THEN
+        assertEquals(192, result)
+    }
+    @Test
+    fun checkCalculationWithAdding(){
+        // GIVEN
+        val expression = "20000 + 2122 + 1 + 2"
+        // WHEN
+        val result = solveExpression(expression)
+        // THEN
+        assertEquals(22125, result)
+    }
+    @Test
+    fun checkCalculationWithSubstraction(){
+        // GIVEN
+        val expression = "6000 - 23 - 45 - 90001 - 27"
+        // WHEN
+        val result = solveExpression(expression)
+        // THEN
+        assertEquals(-84096, result)
     }
 
     @Test
@@ -68,10 +105,6 @@ internal class ParserKtTest {
         val expression2 = "4 * a + y / 3"
         // WHEN & THEN
         assertThrowsExactly(IllegalArgumentException::class.java) { solveExpression(expression) }
-        assertThrowsExactly(IllegalArgumentException::class.java) {solveExpression(expression2)}
+        assertThrowsExactly(IllegalArgumentException::class.java) { solveExpression(expression2) }
     }
-
-
-
-
 }
