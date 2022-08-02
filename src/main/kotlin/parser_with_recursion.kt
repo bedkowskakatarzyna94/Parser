@@ -1,4 +1,4 @@
-private fun calculateExpression(expression: MutableList<String>): Int {
+private fun calculateExpression(expression: MutableList<String>): String {
 
     val operators = listOf("*", "/")
 
@@ -34,39 +34,52 @@ private fun calculateExpression(expression: MutableList<String>): Int {
             result -= expression[index + 1].toInt()
         }
     }
-    return result
+    return result.toString()
 }
 
-fun solveExpression(input: String?): Int {
+private fun solveExpressionRec(expression: List<String>): String {
+    if (expression.none { it == "(" || it == ")" }) {
+        return calculateExpression(expression.toMutableList())
+    }
+    val expressionWithoutParenthesis = expression.toMutableList()
+    while (true) {
+        val openingParenthesisIndex = expressionWithoutParenthesis.indexOfFirst { it == "(" }
+        if (openingParenthesisIndex == -1) {
+            break
+        }
+        val firstClosingParenthesisIndex = expressionWithoutParenthesis.indexOfFirst { it == ")" }
+        val numberOfOpeningParenthesis =
+            expressionWithoutParenthesis.slice(openingParenthesisIndex until firstClosingParenthesisIndex)
+                .count { it == "(" }
+        val closingParenthesisIndex =
+            findClosingParenthesisIndex(expressionWithoutParenthesis, numberOfOpeningParenthesis)
+        val subExpression =
+            expressionWithoutParenthesis.subList(openingParenthesisIndex + 1, closingParenthesisIndex).toList()
+        val subListForRemoval = expressionWithoutParenthesis.subList(openingParenthesisIndex, closingParenthesisIndex)
+        subListForRemoval.clear()
+        expressionWithoutParenthesis[openingParenthesisIndex] = solveExpressionRec(subExpression)
+    }
+    return calculateExpression(expressionWithoutParenthesis)
+}
+
+fun solveExpressionRecursively(input: String?): Int {
     val expression: MutableList<String> = input?.split(' ')?.toMutableList() ?: mutableListOf()
 
     if (!validateExpression(expression)) {
         throw IllegalArgumentException(input)
     }
-
-    while (true) {
-        val openingParenthesisIndex = expression.indexOfLast { it == "(" }
-        val closingParenthesisIndex = findClosingParenthesisIndex(openingParenthesisIndex, expression)
-
-        if ((openingParenthesisIndex != -1) and (closingParenthesisIndex != -1)) {
-            val subexpression = expression.slice((openingParenthesisIndex + 1) until closingParenthesisIndex)
-            val resultOfPartialExpression = calculateExpression(subexpression.toMutableList())
-            expression.subList(openingParenthesisIndex, closingParenthesisIndex).clear()
-            expression[openingParenthesisIndex] = resultOfPartialExpression.toString()
-        } else {
-            break
-        }
-    }
-
-    return calculateExpression(expression)
+    return solveExpressionRec(expression.toList()).toInt()
 }
 
-private fun findClosingParenthesisIndex(openingBraceIndex: Int, expression: MutableList<String>): Int {
-    if (openingBraceIndex != -1) {
-        for (index in openingBraceIndex until expression.size)
-            if (expression[index] == ")") {
-                return index
-            }
+private fun findClosingParenthesisIndex(expression: List<String>, numberOfClosingParenthesis: Int): Int {
+    var i = 0
+    for (index in expression.indices) {
+        if (expression[index] == ")") {
+            i += 1
+        }
+        if (i == numberOfClosingParenthesis) {
+            return index
+        }
     }
     return -1
 }

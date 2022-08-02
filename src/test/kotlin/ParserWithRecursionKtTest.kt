@@ -1,14 +1,13 @@
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-internal class ParserKtTest {
-
+internal class ParserWithRecursionKtTest {
     @Test
     fun shouldCorrectlyAddTwoNumbers() {
 
         val expression = "1 + 2"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(3, result)
     }
@@ -18,7 +17,7 @@ internal class ParserKtTest {
 
         val expression = "10 - 8"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(2, result)
     }
@@ -28,7 +27,7 @@ internal class ParserKtTest {
 
         val expression = "5 * 3"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(15, result)
     }
@@ -38,44 +37,47 @@ internal class ParserKtTest {
 
         val expression = "20 / 4"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(5, result)
     }
 
     @Test
-    fun checkCalculationWithDividing(){
+    fun checkCalculationWithDividing() {
 
         val expression = "20 / 2 / 5 / 2"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(1, result)
     }
+
     @Test
-    fun checkCalculationWithMultiplication(){
+    fun checkCalculationWithMultiplication() {
 
         val expression = "3 * 4 * 8 * 2"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(192, result)
     }
+
     @Test
-    fun checkCalculationWithAdding(){
+    fun checkCalculationWithAdding() {
 
         val expression = "20000 + 2122 + 1 + 2"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(22125, result)
     }
+
     @Test
-    fun checkCalculationWithSubstraction(){
+    fun checkCalculationWithSubstraction() {
 
         val expression = "6000 - 23 - 45 - 90001 - 27"
 
-        val result = solveExpression(expression)
+        val result = solveExpressionRecursively(expression)
 
         assertEquals(-84096, result)
     }
@@ -88,9 +90,9 @@ internal class ParserKtTest {
         val expression3 = "( 34 * ( 3 - ( 4 * -32 ) ) * 82 ) * ( 2 - 3 * 21 ) + 42"
 
 
-        val result = solveExpression(expression)
-        val result2 = solveExpression(expression2)
-        val result3 = solveExpression(expression3)
+        val result = solveExpressionRecursively(expression)
+        val result2 = solveExpressionRecursively(expression2)
+        val result3 = solveExpressionRecursively(expression3)
 
 
         assertEquals(9, result)
@@ -104,7 +106,7 @@ internal class ParserKtTest {
         val expression = "( 1 + 2 * 3"
         val expression2 = "4 * a + y / 3"
 
-        assertThrowsExactly(IllegalArgumentException::class.java) { solveExpression(expression) }
-        assertThrowsExactly(IllegalArgumentException::class.java) { solveExpression(expression2) }
+        assertThrowsExactly(IllegalArgumentException::class.java) { solveExpressionRecursively(expression) }
+        assertThrowsExactly(IllegalArgumentException::class.java) { solveExpressionRecursively(expression2) }
     }
 }
