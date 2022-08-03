@@ -123,7 +123,7 @@ private fun validateExpression(expression: MutableList<String>): Boolean {
 fun main() {
     try {
         print("Enter a mathematical expression (separate each number, parenthesis and operator with a space): ")
-        val result = solveExpression(readLine())
+        val result = solveExpressionRecursively(readLine())
         println("Result: $result")
     } catch (e: IllegalArgumentException) {
         println("Invalid input")
